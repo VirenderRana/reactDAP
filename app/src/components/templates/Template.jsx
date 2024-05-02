@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Modal } from '@mui/material';
+import { Box, Button, Modal } from '@mui/material';
 import TemplateCard from './TemplateCard';
 import AddNewTemplate from './Addtemplate';
 
 const Template = () => {
   const [openModal, setOpenModal] = useState(false);
-  const [configs, setConfigs] = useState([]);  // State to store the configurations
+  const [configs, setConfigs] = useState([]);
 
   useEffect(() => {
     const fetchConfigs = async () => {
@@ -28,6 +28,7 @@ const Template = () => {
   const handleCloseModal = () => {
     setOpenModal(false);
   };
+
   const refreshConfigs = async () => {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/configmodels/');
@@ -53,29 +54,21 @@ const Template = () => {
         justifyContent={'space-between'}
       >
         <Box>My Configurations ({configs.length})</Box>
-        <Box
-          display={'flex'}
-          flexDirection={'row'}
-          alignItems="center"
-          justifyContent="center"
-          height={"40px"}
-          color={'#E22A34'}
-          bgcolor={'rgb(254, 246, 243)'}
-          sx={{
-            '&:hover': {
-              color: '#E22A34',
-              backgroundColor: 'rgb(254, 246, 243)',
-              cursor: 'pointer',
-            },
-            borderRadius: '8px',
-            gap: '10px',
-          }}
+        <Button
           onClick={handleNewButtonClick}
+          sx={{
+            bgcolor: '#E22A34',
+            color: 'white',
+            '&:hover': {
+              bgcolor: '#ca604f',
+              color: 'white',
+            },
+            borderRadius: '20px',
+            textTransform: 'none'
+          }}
         >
-          <Box maxWidth={'250px'} sx={{ whiteSpace: 'nowrap' }}>
-            Create New Configuration
-          </Box>
-        </Box>
+          Create New Configuration
+        </Button>
       </Box>
       <Box
         display={'flex'}

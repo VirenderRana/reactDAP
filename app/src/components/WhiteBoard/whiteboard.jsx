@@ -547,6 +547,7 @@ const Whiteboard = ({ aspectRatio = 4 / 3, fileReaderInfo, updateFileReaderInfo 
         value={pickNumber}
         onChange={(e) => setPickNumber(e.target.value)}
         label="Pick Number"
+        defaultValue=""
       >
         <MenuItem value="Master Structure">Master Structure</MenuItem>
         <MenuItem value="Project Area">Project Area</MenuItem>
