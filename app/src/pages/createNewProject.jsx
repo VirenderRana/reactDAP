@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Box, Divider, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { TextField, Button, Box, Divider, Select, MenuItem, FormControl, InputLabel, Typography } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import ProjectDataContext from '../ProjectDataContext';
 
@@ -38,7 +38,7 @@ const CreateNewProject = ({ setOpenModal }) => {
   return (
     <Box justifyContent='center' alignItems='center'>
       <Box
-        maxWidth={853}
+        width='350px'
         bgcolor='#FFFFFF'
         borderRadius={5}
         padding={2}
@@ -46,7 +46,7 @@ const CreateNewProject = ({ setOpenModal }) => {
         alignItems='center'
       >
         <Box display='flex' flexDirection='row' justifyContent='space-between'>
-          <h1 style={{ textAlign: 'left', margin: 5 }}>Create New Project</h1>
+        <Typography variant="h6" gutterBottom>Create New Project</Typography>
           <HighlightOffIcon
             style={{ color: 'grey' }}
             id='exit'

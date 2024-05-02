@@ -29,7 +29,7 @@ const HeaderHome = ({ onClickPath }) => {
           alignItems="center"
           width="190px"
         >
-          <img src={Aeis} alt="AEIS" style={{ width: '50px', height: '50px', objectFit: 'contain' }} />
+          <img src={Aeis} alt="AEIS" style={{ width: '50px', height: '50px', objectFit: 'contain', borderRadius: '10px' }} />
         </Box>
         <Box
           display="flex"

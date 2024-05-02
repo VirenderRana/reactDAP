@@ -19,7 +19,7 @@ const Template = () => {
     };
 
     fetchConfigs();
-  }, []);
+  }, [configs]);
 
   const handleNewButtonClick = () => {
     setOpenModal(true);
@@ -92,7 +92,7 @@ const Template = () => {
           alignItems="center"
           maxHeight={'100vh'}
         >
-          <AddNewTemplate setOpenModal={setOpenModal} />
+          <AddNewTemplate setOpenModal={setOpenModal} refreshConfigs={refreshConfigs} />
         </Box>
       </Modal>
     </Box>

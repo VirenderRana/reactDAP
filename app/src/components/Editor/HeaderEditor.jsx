@@ -39,7 +39,7 @@ const HeaderEditor = () => {
                     borderRadius={2}
                     sx={{ padding: 1 }}
                 >
-                    <img src={Aeis} alt="AEIS" width='148px' height='33px' />
+                    <img src={Aeis} alt="AEIS" style={{ width: '50px', height: '50px', objectFit: 'contain', borderRadius: '10px' }} />
                 </Box>
                 <Divider orientation="vertical" flexItem sx={{ mx: 2, bgcolor: 'divider' }} />
                 <Box
