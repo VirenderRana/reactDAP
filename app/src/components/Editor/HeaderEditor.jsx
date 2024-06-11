@@ -5,12 +5,12 @@ import Aeis from '../../assets/Aeis.png';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import HomeIcon from '@mui/icons-material/Home';
-import ProjectDataContext from '../../ProjectDataContext';
+// import { ProjectDataContext } from '../../ProjectDataContext'; // Import the ProjectDataContext
 
 const HeaderEditor = () => {
-    const { projectData } = useContext(ProjectDataContext);
+    // const { projectData } = useContext(ProjectDataContext);
     let navigate = useNavigate();
-    const projectTitle = projectData.projectName;
+    // const projectTitle = projectData.projectName;
 
     function handleClose() {
         navigate('/');
@@ -61,8 +61,8 @@ const HeaderEditor = () => {
                         gap={2}
                     >
                         <HomeIcon sx={{ color: '#fff' }} />
-                        <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', color: '#000' }}>Project: {projectTitle}</Box>
-                        <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', color: '#000' }}>({projectData.siteName})</Box>
+                        <Box component="span" sx={{ display: 'inline-flex', alignItems: 'center', color: '#000' }}>Project 1</Box>
+                        {/* Remove projectData.siteName as it's not stored */}
                     </Box>
                     <Box
                         display='flex'

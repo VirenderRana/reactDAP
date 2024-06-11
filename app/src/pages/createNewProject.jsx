@@ -3,36 +3,29 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { TextField, Button, Box, Divider, Select, MenuItem, FormControl, InputLabel, Typography } from '@mui/material';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import ProjectDataContext from '../ProjectDataContext';
+import { ProjectDataContext } from '../ProjectDataContext'; // Import the ProjectDataContext
 
 const CreateNewProject = ({ setOpenModal }) => {
   const navigate = useNavigate();
-  const { control, register, handleSubmit, formState: { errors }, reset } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const [configs, setConfigs] = useState([]);
-  const { setProjectData } = useContext(ProjectDataContext);
+  const { setProjectsData, configsData, setProjectName } = useContext(ProjectDataContext); // Get configsData and setProjectName from context
 
   useEffect(() => {
-    const fetchConfigs = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/api/configmodels/');
-        const data = await response.json();
-        setConfigs(data);
-      } catch (error) {
-        console.error('Error fetching configurations:', error);
-      }
-    };
-    fetchConfigs();
-  }, []);
+    // Set configs from context data
+    setConfigs(configsData);
+  }, [configsData]); // Update configs whenever configsData changes
 
   const handleCloseModal = () => {
     setOpenModal(false);
   };
 
-  const onSubmit = (data) => {
-    setProjectData(data);
-    console.log(data);
-    reset();
-    navigate('/editor');
+  const onSubmit = async (data) => {
+    // Store the project name in the context
+    setProjectName(data.projectName);
+    
+    reset(); // Reset the form fields
+    navigate('/editor'); // Navigate to the editor route
   };
 
   return (
@@ -46,7 +39,7 @@ const CreateNewProject = ({ setOpenModal }) => {
         alignItems='center'
       >
         <Box display='flex' flexDirection='row' justifyContent='space-between'>
-        <Typography variant="h6" gutterBottom>Create New Project</Typography>
+          <Typography variant="h6" gutterBottom>Create New Project</Typography>
           <HighlightOffIcon
             style={{ color: 'grey' }}
             id='exit'
@@ -67,7 +60,10 @@ const CreateNewProject = ({ setOpenModal }) => {
             <TextField
               fullWidth
               placeholder='Site Name'
-              {...register('siteName')}
+              {...register('projectName', {
+                required: 'Project Name is required',
+                maxLength: 50
+              })} // Generate random value
             />
             <FormControl fullWidth>
               <InputLabel id="supermodel-label">Supermodel Type</InputLabel>
@@ -75,9 +71,9 @@ const CreateNewProject = ({ setOpenModal }) => {
                 labelId="supermodel-label"
                 {...register('supermodelType')}
               >
-                <MenuItem value="Orthotropic">Orthotropic</MenuItem>
-                <MenuItem value="Multistory Building">Multistory Building</MenuItem>
-                <MenuItem value="Aviation Project">Aviation Project</MenuItem>
+                <MenuItem key="1" value="Orthotropic">Orthotropic</MenuItem>
+                <MenuItem key="2" value="Multistory Building">Multistory Building</MenuItem>
+                <MenuItem key="3" value="Aviation Project">Aviation Project</MenuItem>
               </Select>
             </FormControl>
             <FormControl fullWidth>
@@ -89,7 +85,7 @@ const CreateNewProject = ({ setOpenModal }) => {
                 {...register('config')}
               >
                 {configs.map(config => (
-                  <MenuItem key={config.id} value={config.mcc}>
+                  <MenuItem key={Math.random().toString(36).substring(7)} value={config.mcc}> {/* Generate random key */}
                     {config.model_name}
                   </MenuItem>
                 ))}

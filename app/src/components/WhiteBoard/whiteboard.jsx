@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Box, Button, IconButton, TextField, Typography, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { fabric } from 'fabric';
@@ -22,7 +22,6 @@ import subfloor from './images/bridge/SubFloorBeam.svg';
 import angel from './images/bridge/UmbrellaAngel.svg';
 import separator from './images/bridge/separator.svg';
 import close from './images/bridge/close.svg';
-
 import './eraserBrush.jsx';
 
 import styles from './index.module.scss';
@@ -333,7 +332,7 @@ const Whiteboard = ({ aspectRatio = 4 / 3, fileReaderInfo, updateFileReaderInfo 
 
   function onSaveCanvasAsImage() {
     canvasRef.current.toBlob(function (blob) {
-      saveAs(blob, 'image.png');
+      saveAs(blob, `project1_image.png`);
     });
   }
 
@@ -355,77 +354,100 @@ const Whiteboard = ({ aspectRatio = 4 / 3, fileReaderInfo, updateFileReaderInfo 
       <canvas ref={canvasRef} id="canvas" />
       <Modal open={isOpen} onClose={() => setIsOpen(false)}>
       <Box sx={{
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-    p: 4,
-    borderRadius: 2,
-    minWidth: 300,
-    maxWidth: '90vw',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 2,
-    alignItems: 'center'
-  }}>
-    <Typography variant="h6" color="text.primary" gutterBottom>
-      Upload File and Enter Pick Number
-    </Typography>
-    <FormControl fullWidth sx={{ mb: 2 }}>
-      <InputLabel id="pick-number-label">Pick Number</InputLabel>
-      <Select
-        labelId="pick-number-label"
-        value={pickNumber}
-        onChange={(e) => setPickNumber(e.target.value)}
-        label="Pick Number"
-        defaultValue=""
-      >
-        <MenuItem value="Master Structure">Master Structure</MenuItem>
-        <MenuItem value="Project Area">Project Area</MenuItem>
-        <MenuItem value="Inspection Area">Inspection Area</MenuItem>
-        <MenuItem value="Inspection Type">Inspection Type</MenuItem>
-        <MenuItem value="Component">Component</MenuItem>
-      </Select>
-    </FormControl>
-    <Button
-      variant="contained"
-      component="label"
-      sx={{ mb: 1 }}
-    >
-      Upload Image
-      <input
-        type="file"
-        hidden
-        accept="image/*"
-        ref={uploadImageRef}
-        onChange={uploadImage}
-      />
-    </Button>
-    <Button
-      variant="contained"
-      component="label"
-    >
-      Upload PDF
-      <input
-        type="file"
-        hidden
-        accept=".pdf"
-        ref={uploadPdfRef}
-        onChange={onFileChange}
-      />
-    </Button>
-    <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
-      <Button onClick={() => setIsOpen(false)} variant="contained" color="primary">
-        Submit
-      </Button>
-      <Button onClick={() => setIsOpen(false)} variant="outlined" color="secondary">
-        Cancel
-      </Button>
-    </Box>
-  </Box>
-</Modal>
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        bgcolor: 'background.paper',
+        boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+        p: 4,
+        borderRadius: 4,
+        minWidth: 300,
+        maxWidth: '90vw',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        alignItems: 'center'
+      }}>
+        <Typography variant="h6" color="text.primary" gutterBottom>
+          Upload File and Select Type
+        </Typography>
+        <FormControl fullWidth sx={{ mb: 2 }}>
+          <InputLabel id="pick-number-label">Selections</InputLabel>
+          <Select
+            labelId="pick-number-label"
+            value={pickNumber}
+            onChange={(e) => setPickNumber(e.target.value)}
+            label="Selections"
+            defaultValue=""
+          >
+            <MenuItem value="Master Structure">Master Structure</MenuItem>
+            <MenuItem value="Project Area">Project Area</MenuItem>
+            <MenuItem value="Inspection Area">Inspection Area</MenuItem>
+            <MenuItem value="Inspection Type">Inspection Type</MenuItem>
+            <MenuItem value="Component">Component</MenuItem>
+          </Select>
+        </FormControl>
+        <Box sx={{ display: 'flex', width: '100%', justifyContent: 'space-around', mb: 2 }}>
+          <Button
+            variant="contained"
+            component="label"
+            sx={{
+              backgroundColor: '#2979ff',
+              ':hover': { backgroundColor: '#5393ff' },
+              borderRadius: 2,
+              textTransform: 'none'
+            }}
+          >
+            Upload Image
+            <input
+              type="file"
+              hidden
+              accept="image/*"
+              ref={uploadImageRef}
+              onChange={uploadImage}
+            />
+          </Button>
+          <Button
+            variant="contained"
+            component="label"
+            sx={{
+              backgroundColor: '#ff5722',
+              ':hover': { backgroundColor: '#ff8a50' },
+              borderRadius: 2,
+              textTransform: 'none'
+            }}
+          >
+            Upload PDF
+            <input
+              type="file"
+              hidden
+              accept=".pdf"
+              ref={uploadPdfRef}
+              onChange={onFileChange}
+            />
+          </Button>
+        </Box>
+        <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
+          <Button
+            onClick={() => setIsOpen(false)}
+            variant="contained"
+            sx={{ backgroundColor: '#00e676', color: 'white', ':hover': { backgroundColor: '#33eb91' } }}
+            color="primary"
+          >
+            Submit
+          </Button>
+          <Button
+            onClick={() => setIsOpen(false)}
+            variant="outlined"
+            sx={{ borderColor: '#00e676', color: '#00e676', ':hover': { borderColor: '#00e676', color: '#00e676' } }}
+            color="secondary"
+          >
+            Cancel
+          </Button>
+        </Box>
+      </Box>
+    </Modal>
 
 
       <div className={`${styles.extendedToolbar} ${showExtendedToolbar ? styles.show : ''}`}>

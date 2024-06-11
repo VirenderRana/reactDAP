@@ -1,27 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Box } from '@mui/system';
+import React, { useContext } from 'react';
+import { Box, CircularProgress } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import GridViewIcon from '@mui/icons-material/GridView';
 import ExtFileComponent from '../ExtFileComponent';
+import { ProjectDataContext } from '../../ProjectDataContext'; // Ensure the path is correct
 
 const MainLandingPageComponent = () => {
-  const [projects, setProjects] = useState([]);
+  // Use useContext to access the projects data from context
+  const { projectsData } = useContext(ProjectDataContext);
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/api/projects/');
-        const data = await response.json();
-        const validProjects = data.filter(project => project.title != null);
-        setProjects(validProjects);
-      } catch (error) {
-        console.error('Failed to fetch projects:', error);
-      }
-    };
-
-    fetchProjects();
-  }, []);
+  if (!projectsData) {
+    // Show a loading spinner or similar indicator while the data is being loaded
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box display="flex" flexDirection="column" marginTop="10px" marginLeft="150px">
@@ -39,11 +35,11 @@ const MainLandingPageComponent = () => {
         </Box>
       </Box>
       <Box display="inline-flex" flexDirection="row" gap="10px" marginTop="10px" flexWrap="wrap" maxWidth="1200px" marginLeft="60px" marginRight="100px" overflow="hidden">
-        {projects.map((project, index) => (
+        {projectsData.map((project, index) => (
           <ExtFileComponent
             filename={project.title}
             createdAt={project.edition}
-            key={index}
+            key={project.id || index}  // It's better to use unique identifiers when available
           />
         ))}
       </Box>

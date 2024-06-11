@@ -1,29 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Typography, Dialog, DialogTitle, DialogContent, DialogActions, Button, Box } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ProjectDataContext } from '../../ProjectDataContext'; // Ensure the path is correct
 
-const TemplateCard = ({ id, title, refreshConfigs }) => {
+const TemplateCard = ({ id, title }) => {
     const [openEditModal, setOpenEditModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const { configsData, setConfigsData } = useContext(ProjectDataContext);
 
     const handleEditModalOpen = () => setOpenEditModal(true);
     const handleEditModalClose = () => setOpenEditModal(false);
     const handleDeleteModalOpen = () => setOpenDeleteModal(true);
     const handleDeleteModalClose = () => setOpenDeleteModal(false);
 
-    const handleDelete = async () => {
-        try {
-            const response = await fetch(`http://127.0.0.1:8000/api/configmodels/${id}/`, { method: 'DELETE' });
-            if (response.ok) {
-              console.log("Template deleted successfully");
-              refreshConfigs();
-            } else {
-              throw new Error('Failed to delete the template');
-            }
-        } catch (error) {
-            console.error('Error deleting template:', error);
-        }
+    const handleDelete = () => {
+        // Filter out the configuration that needs to be deleted
+        const updatedConfigs = configsData.filter(config => config.id !== id);
+        setConfigsData(updatedConfigs);
+        console.log("Template deleted successfully");
         handleDeleteModalClose();
     };
 
@@ -48,7 +43,7 @@ const TemplateCard = ({ id, title, refreshConfigs }) => {
                 {title}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', my: 1 }}>
-                <SettingsIcon sx={{ fontSize: 40 }} />
+                <SettingsIcon sx={{ fontSize: 40 }} onClick={handleEditModalOpen} />
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', p: 1 }}>
                 <Button startIcon={<SettingsIcon />} onClick={handleEditModalOpen}>

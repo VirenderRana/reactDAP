@@ -1,25 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Box, Button, Modal } from '@mui/material';
 import TemplateCard from './TemplateCard';
 import AddNewTemplate from './Addtemplate';
+import { ProjectDataContext } from '../../ProjectDataContext'; // Adjust the path accordingly
 
 const Template = () => {
   const [openModal, setOpenModal] = useState(false);
-  const [configs, setConfigs] = useState([]);
 
-  useEffect(() => {
-    const fetchConfigs = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/api/configmodels/');
-        const data = await response.json();
-        setConfigs(data);
-      } catch (error) {
-        console.error('Failed to fetch configurations:', error);
-      }
-    };
-
-    fetchConfigs();
-  }, [configs]);
+  // Access configs from context
+  const { configsData } = useContext(ProjectDataContext);
 
   const handleNewButtonClick = () => {
     setOpenModal(true);
@@ -29,11 +18,13 @@ const Template = () => {
     setOpenModal(false);
   };
 
+  // Assuming refreshConfigs still needs to fetch and update context:
   const refreshConfigs = async () => {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/configmodels/');
       const data = await response.json();
-      setConfigs(data);
+      // Assuming you have a method to update configs in context
+      updateConfigsData(data);  // This method needs to be defined in your context provider
     } catch (error) {
       console.error('Failed to fetch configurations:', error);
     }
@@ -53,7 +44,7 @@ const Template = () => {
         flexDirection={'row'}
         justifyContent={'space-between'}
       >
-        <Box>My Configurations ({configs.length})</Box>
+        <Box>My Configurations ({configsData.length})</Box>
         <Button
           onClick={handleNewButtonClick}
           sx={{
@@ -75,16 +66,16 @@ const Template = () => {
         flexDirection={'row'}
         gap={'20px'}
         flexWrap={'wrap'}
-      >
-        {configs.map(config => (
-          <TemplateCard
-            key={config.id}
-            id={config.id}
+        >
+        {configsData.map(config => (
+            <TemplateCard
+            key={config.mcc} 
+            id={config.mcc}
             title={`${config.model_name}`}
             refreshConfigs={refreshConfigs}
-          />
+            />
         ))}
-      </Box>
+        </Box>
       <Modal open={openModal} onClose={handleCloseModal}>
         <Box
           display="flex"

@@ -5,6 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '@mui/icons-material/Save';
 import InfoIcon from '@mui/icons-material/Info';
 import { styled } from '@mui/system';
+import { useNavigate } from 'react-router-dom';
 
 // Custom styled Box component for the sidebar
 const SidebarContainer = styled(Box)(({ theme }) => ({
@@ -21,9 +22,16 @@ const SidebarContainer = styled(Box)(({ theme }) => ({
 }));
 
 const VerticalSideBarEditorComponent = () => {
+  let navigate = useNavigate();
+
+  // Function to handle navigation to home
+  const handleHomeClick = () => {
+    navigate('/');
+  };
+
   return (
     <SidebarContainer>
-      <IconButton color="inherit">
+      <IconButton color="inherit" onClick={handleHomeClick}>
         <HomeIcon />
       </IconButton>
       <IconButton color="inherit">

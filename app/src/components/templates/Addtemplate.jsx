@@ -1,30 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { TextField, Button, Box, IconButton, MenuItem, Select, FormControl, InputLabel, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import { ProjectDataContext } from '../../ProjectDataContext'; // Ensure the path is correct
 
-const AddNewTemplate = ({ setOpenModal, refreshConfigs }) => {
+const AddNewTemplate = ({ setOpenModal }) => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
+    const { configsData, setConfigsData } = useContext(ProjectDataContext);
     const [fields, setFields] = useState([]);
-    const [configs, setConfigs] = useState([]);
     const [selectedConfigs, setSelectedConfigs] = useState([]);
-    const [isLoadingConfigs, setIsLoadingConfigs] = useState(false);
-  
-    useEffect(() => {
-        const fetchConfigs = async () => {
-            setIsLoadingConfigs(true);
-            try {
-                const response = await fetch('http://127.0.0.1:8000/api/configmodels/');
-                const data = await response.json();
-                setConfigs(data);
-            } catch (error) {
-                console.error('Failed to fetch configurations', error);
-            }
-            setIsLoadingConfigs(false);
-        };
-        fetchConfigs();
-    }, []);
 
     const handleSelectConfig = (config) => {
         const isAlreadySelected = selectedConfigs.some(selected => selected.id === config.id);
@@ -39,42 +24,24 @@ const AddNewTemplate = ({ setOpenModal, refreshConfigs }) => {
         setOpenModal(false);
     };
 
-    const onSubmit = async (data) => {
+    const onSubmit = data => {
         const fieldsData = fields.map(field => ({
             name: field.fieldName,
             type: field.fieldType
         }));
-        
-        const associatedConfigs = selectedConfigs.map(config => ({
-            name: config.model_name,
-            mcc: config.mcc
-        }));
-        
-        try {
-            const response = await fetch('http://127.0.0.1:8000/api/configmodels/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    model_name: data.modelName,
-                    fields_data: fieldsData,
-                    associated_configs: associatedConfigs
-                })
-            });
-        
-            if (response.ok) {
-                const result = await response.json();
-                console.log(result);
-                reset();
-                handleCloseModal();
-                refreshConfigs(); // Call the refreshConfigs function passed via props
-            } else {
-                throw new Error('Network response was not ok');
-            }
-        } catch (error) {
-            console.error('There was a problem with the fetch operation:', error);
-        }
+
+        const newConfig = {
+            id: Math.max(...configsData.map(c => c.id)) + 1, // generate a new unique ID
+            model_name: data.modelName,
+            fields_data: fieldsData,
+            associated_configs: selectedConfigs,
+            last_update: new Date().toISOString() // Add a timestamp for the last update
+        };
+
+        setConfigsData([...configsData, newConfig]);
+        console.log("New configuration added successfully:", newConfig);
+        reset();
+        handleCloseModal();
     };
 
     const addField = () => {
@@ -127,7 +94,7 @@ const AddNewTemplate = ({ setOpenModal, refreshConfigs }) => {
                 </Button>
                 <Box sx={{ mt: 2, mb: 1 }}>
                     <Typography variant="subtitle1">Select Configurations:</Typography>
-                    {configs.map(config => (
+                    {configsData.map(config => (
                         <Button
                             key={config.id}
                             onClick={() => handleSelectConfig(config)}
@@ -141,7 +108,7 @@ const AddNewTemplate = ({ setOpenModal, refreshConfigs }) => {
                 </Box>
                 <Box display="flex" justifyContent="space-between">
                     <Button type="submit" variant="contained" sx={{ bgcolor: '#4CAF50', color: 'white' }}>Create</Button>
-                    <Button onClick={() => setOpenModal(false)} variant="contained" sx={{ bgcolor: '#f44336', color: 'white' }}>Cancel</Button>
+                    <Button onClick={handleCloseModal} variant="contained" sx={{ bgcolor: '#f44336', color: 'white' }}>Cancel</Button>
                 </Box>
             </Box>
         </Box>

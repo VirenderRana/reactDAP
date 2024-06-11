@@ -1,5 +1,5 @@
 import './App.css'
-import ProjectDataContext from './ProjectDataContext';
+import { ProjectDataContext, ProjectDataContextProvider } from './ProjectDataContext';
 import React, { useState} from 'react';
 // import LoginPage from './pages/LoginPage';
 // import CreateNewProject from './pages/createNewProject';
@@ -16,10 +16,9 @@ const theme = createTheme({
   // your theme options
 });
 function App() {
-  const [projectData, setProjectData] = useState({});
 
   return (
-    <ProjectDataContext.Provider value={{ projectData, setProjectData }}>
+    <ProjectDataContextProvider>
       <ThemeProvider theme={theme}>
         <Router>
           <Routes>
@@ -28,7 +27,7 @@ function App() {
           </Routes>
         </Router>
       </ThemeProvider>
-    </ProjectDataContext.Provider>
+    </ProjectDataContextProvider>
     
   )
 }
